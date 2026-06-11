@@ -32,6 +32,16 @@ def __init_logger():
         )
         return _format
 
+    # On Windows the console defaults to cp1252, so loguru raises
+    # UnicodeEncodeError when a message contains non-Latin-1 characters
+    # (e.g. the ①②③ progress markers in video.py). Force UTF-8 on the
+    # stream; no-op when the stream can't be reconfigured.
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="backslashreplace")
+        except (AttributeError, ValueError):
+            pass
+
     logger.remove()
 
     logger.add(

@@ -181,6 +181,15 @@ def init_log():
     logger.remove()
     _lvl = "DEBUG"
 
+    # On Windows the console defaults to cp1252, which raises
+    # UnicodeEncodeError when loguru prints non-Latin-1 characters. Force
+    # UTF-8 on the stream; no-op when the stream can't be reconfigured.
+    for _stream in (sys.stdout, sys.stderr):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="backslashreplace")
+        except (AttributeError, ValueError):
+            pass
+
     def format_record(record):
         # 获取日志记录中的文件全路径
         file_path = record["file"].path

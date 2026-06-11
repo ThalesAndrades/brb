@@ -65,8 +65,9 @@ llm_provider = "openai"
 # Visit https://pollinations.ai/ to learn more
 # API Key is optional - leave empty for public access
 pollinations_api_key = ""
-# Default base URL for Pollinations API
-pollinations_base_url = "https://pollinations.ai/api/v1"
+# Default base URL for Pollinations API (OpenAI-compatible chat endpoint).
+# Must be the POST-able completions endpoint; the bare /api/v1 host returns 405.
+pollinations_base_url = "https://text.pollinations.ai/openai"
 # Default model for text generation
 pollinations_model_name = "openai-fast"
 
