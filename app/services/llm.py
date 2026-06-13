@@ -290,7 +290,14 @@ def _generate_response(prompt: str) -> str:
                     headers = {
                         "Content-Type": "application/json"
                     }
-                    
+                    # Send the token when configured. Anonymous Pollinations is
+                    # rate-limited per shared edge IP (HTTP 429 "queue full");
+                    # a free token from https://enter.pollinations.ai gives a
+                    # private bucket. Without a token, requests stay anonymous.
+                    pollinations_api_key = config.app.get("pollinations_api_key", "")
+                    if pollinations_api_key:
+                        headers["Authorization"] = f"Bearer {pollinations_api_key}"
+
                     # Make the API request
                     response = requests.post(base_url, headers=headers, json=payload)
                     response.raise_for_status()
